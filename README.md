@@ -1,6 +1,6 @@
 # 1-oji užduotis: Hash funkcijos generatoriaus kūrimas
 
-## v0.1 pseud-kodas:
+## v0.1 pseudo-kodas:
 
 ```
 START
