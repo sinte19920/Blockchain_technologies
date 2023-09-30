@@ -1,131 +1,151 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <bitset>
-#include <random>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <map>
+#include <stdexcept>
 
 using namespace std;
 
-string generuotiAtsitiktineEilute()
+string intToBinary(int num)
 {
-    bool unique = false;
-    string hexResult = "";
+    bitset<8> binary(num);
+    
+    return binary.to_string();
+}
 
-    while(!unique){
-        string randomBinaryString = "";
+string binaryToHex(const string &binary)
+{
+    bitset<8> bits(binary);
+    stringstream stream;
+    stream << hex << bits.to_ulong();
+    
+    return stream.str();
+}
 
-        random_device rd;
-        mt19937 gen(rd());
-        uniform_int_distribution<int> distribution(0, 1);
+void processBlock(const string &block, int unicodeValue, int bitCount, string &output)
+{
+    vector<string> subblocks;
+    output.clear();
 
-        while (randomBinaryString.length() < 256)
-        {
-            int randomBit = distribution(gen);
-            randomBinaryString += to_string(randomBit);
-        }
-
-        // Suskirstomas 256bit bin kodas į 4 dalis po 64bit
-        for (int i = 0; i < 4; ++i)
-        {
-            string binaryChunk = randomBinaryString.substr(i * 64, 64);
-            // Konvertuojamas kiekvienas 64 bitų dalis į 16taini formatą
-            bitset<64> bitset(binaryChunk);
-            unsigned long long chunkValue = bitset.to_ullong();
-            char hexBuffer[17];
-            snprintf(hexBuffer, sizeof(hexBuffer), "%016llx", chunkValue);
-            hexResult += hexBuffer;
-        }
-        ifstream file("output_archive.txt");
-        bool exists = false;
-        string existingContent;
-
-        while (getline(file, existingContent))
-        {
-            if (existingContent == hexResult)
-            {
-                exists = true;
-                break;
-            }
-        }
-        file.close();
-
-        if (!exists)
-            unique = true;
+    size_t blockSize = (block.size() == 256) ? 64 : 256;
+    for (size_t i = 0; i < block.size(); i += blockSize)
+    {
+        string subblock = block.substr(i, blockSize);
+        subblocks.push_back(subblock);
     }
-    return hexResult;
+
+    for (const string &subblock : subblocks)
+    {
+        string shiftedSubblock;
+        int value = (unicodeValue / 13 + bitCount) % 5;
+
+        for (size_t i = 0; i < subblock.size(); i += 18)
+        {
+            string subblockPart = subblock.substr(i, 18);
+            int shiftAmount = i % 8 + value;
+            string shiftedPart = subblockPart.substr(shiftAmount) + subblockPart.substr(0, shiftAmount);
+            shiftedSubblock += shiftedPart;
+        }
+
+        vector<string> nibbles;
+        // 64bit sukarpymas į 16x4bit
+        for (size_t i = 0; i < shiftedSubblock.size(); i += 4)
+        {
+            string nibble = shiftedSubblock.substr(i, 4);
+            nibbles.push_back(nibble);
+        }
+        for (const string &nibble : nibbles)
+        {
+            string hexNibble = binaryToHex(nibble);
+            output += hexNibble;
+        }
+    }
 }
 
 int main()
 {
-    string userInput;
-    cout << "Pasirinkite, su kuriuo failu norite dirbti: " << endl;
-    
-    cout << endl;
-    system("ls -1 *.txt");
-    cout << endl;
-    
-    cin >> userInput;
+    int unicodeValue = 0;
+    int choice;
+    cout << "Pasirinkite: 1 - įvedimas ranka, 2 - skaitymas iš failo: ";
+    cin >> choice;
 
-    ifstream inputFile(userInput);
-
-    if (!inputFile)
+    string input;
+    if (choice == 1)
     {
-        cerr << "Nepavyko atidaryti failo." << endl;
-        return 1;
+        cout << "Įveskite žodį, kurį norite užkoduoti: " << endl;
+        cin >> input;
     }
-
-    string visaEilute;
-
-    string eilute;
-    while (getline(inputFile, eilute))
+    else if (choice == 2)
     {
-        visaEilute += eilute;
-    }
+        string userInput;
+        cout << "Pasirinkite, su kuriuo failu norite dirbti: " << endl;
 
-    bool rastas = false;
-    ifstream inputArchive("input_archive.txt");
-    ifstream outputArchive("output_archive.txt");
+        cout << endl;
+        system("ls -1 *.txt");
+        cout << endl;
 
-    if (!inputArchive || !outputArchive)
-    {
-        cerr << "Nepavyko atidaryti archyvų failų." << endl;
-        return 1;
-    }
+        cin >> userInput;
 
-    string eiluteIsArchyvo;
-    string rastasOutputas;
+        ifstream inputFile(userInput);
 
-    while (getline(inputArchive, eiluteIsArchyvo) && getline(outputArchive, rastasOutputas))
-    {
-        if (eiluteIsArchyvo == visaEilute)
+        if (!inputFile)
         {
-            rastas = true;
-            cout << "Rastas outputas: " << rastasOutputas << endl;
-            break;
-        }
-    }
-
-    if (!rastas)
-    {
-        inputArchive.close();
-        outputArchive.close();
-
-        ofstream inputArchiveAppend("input_archive.txt", ios::app);
-        ofstream outputArchiveAppend("output_archive.txt", ios::app);
-
-        if (!inputArchiveAppend || !outputArchiveAppend)
-        {
-            cerr << "Nepavyko atidaryti archyvų failų naujam rašymui." << endl;
+            cerr << "Nepavyko atidaryti failo." << endl;
             return 1;
         }
 
-        inputArchiveAppend << visaEilute << endl;
-
-        string naujasOutputas = generuotiAtsitiktineEilute();
-        outputArchiveAppend << naujasOutputas << endl;
-
-        cout << "Naujas outputas: " << naujasOutputas << endl;
+        string eilute;
+        while (getline(inputFile, eilute))
+            input += eilute;
+        inputFile.close();
     }
+
+    int bitCount1 = input.size() * 8;
+    int bitCount = input.size();
+
+    for (int i = 0; i < input.size(); i++)
+        unicodeValue += static_cast<int>(input[i]);
+
+    int targetBitCount = (bitCount1 < 256) ? 256 : ((bitCount1 / 256) + 1) * 256; 
+
+    string binaryInput;
+    for (char c : input)
+    {
+        bitset<8> binaryChar(c);
+        binaryInput += binaryChar.to_string();
+    }
+
+    int number = bitCount;
+
+    while (binaryInput.size() < targetBitCount)
+    {
+        binaryInput += intToBinary(number);
+        number += bitCount;
+    }
+
+
+    vector<string> blocks;
+    for (size_t i = 0; i < input.size(); i += 256)
+    {
+        string block = binaryInput.substr(i, 256);
+        blocks.push_back(block);
+    }
+
+    string output;
+
+    for (const string &block : blocks)
+    {
+        int blockBitCount = block.size();
+
+        processBlock(block, unicodeValue, bitCount, output);
+    }
+
+    cout << "Rezultatas (hexadecimal): " << output << endl;
+
+    blocks.clear();
 
     return 0;
 }
