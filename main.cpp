@@ -100,6 +100,10 @@ int main()
         string eilute;
         while (getline(inputFile, eilute))
             input += eilute;
+
+        if(input.empty())
+            input = " ";
+        
         inputFile.close();
     }
 
