@@ -96,9 +96,6 @@ int main()
             cerr << "Nepavyko atidaryti failo." << endl;
             return 1;
         }
-
-        if (inputFile.tellg() == 0)
-            cout << "Failas yra tuščias." << endl; 
         
         string eilute;
         while (getline(inputFile, eilute))
@@ -150,8 +147,7 @@ int main()
         processBlock(block, unicodeValue, bitCount, output);
     }
 
-    if (!output.empty())
-        cout << "Rezultatas (hexadecimal): " << output << endl;
+    cout << "Rezultatas (hexadecimal): " << output << endl;
 
     blocks.clear();
 
