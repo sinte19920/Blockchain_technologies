@@ -6,6 +6,7 @@
 #include <sstream>
 #include <map>
 #include <stdexcept>
+#include <cmath>
 
 using namespace std;
 
@@ -41,7 +42,7 @@ void processBlock(const string &block, int unicodeValue, int bitCount, string &o
     {
         string shiftedSubblock;
         int value = (unicodeValue / 13 + bitCount) % 5;
-
+        cout << "value: " << value << endl;
         for (size_t i = 0; i < subblock.size(); i += 18)
         {
             string subblockPart = subblock.substr(i, 18);
@@ -97,6 +98,9 @@ int main()
             return 1;
         }
 
+        if (inputFile.tellg() == 0)
+            cout << "Failas yra tuščias." << endl; 
+        
         string eilute;
         while (getline(inputFile, eilute))
             input += eilute;
@@ -106,10 +110,15 @@ int main()
     int bitCount1 = input.size() * 8;
     int bitCount = input.size();
 
-    for (int i = 0; i < input.size(); i++)
-        unicodeValue += static_cast<int>(input[i]);
+    for (int i = 0; i < input.size(); i++){
 
-    int targetBitCount = (bitCount1 < 256) ? 256 : ((bitCount1 / 256) + 1) * 256; 
+        if(i == input.size() / 2)
+            unicodeValue += static_cast<int>(input[i]) * 17;
+
+        unicodeValue += static_cast<int>(input[i]);
+    }
+
+    int targetBitCount = (bitCount1 < 256) ? 256 : ((bitCount1 / 256) + 1) * 256;
 
     string binaryInput;
     for (char c : input)
@@ -123,9 +132,8 @@ int main()
     while (binaryInput.size() < targetBitCount)
     {
         binaryInput += intToBinary(number);
-        number += bitCount;
+        number += bitCount + static_cast<int>(input[0]);
     }
-
 
     vector<string> blocks;
     for (size_t i = 0; i < input.size(); i += 256)
@@ -143,7 +151,8 @@ int main()
         processBlock(block, unicodeValue, bitCount, output);
     }
 
-    cout << "Rezultatas (hexadecimal): " << output << endl;
+    if (!output.empty())
+        cout << "Rezultatas (hexadecimal): " << output << endl;
 
     blocks.clear();
 
