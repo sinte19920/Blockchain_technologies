@@ -42,7 +42,6 @@ void processBlock(const string &block, int unicodeValue, int bitCount, string &o
     {
         string shiftedSubblock;
         int value = (unicodeValue / 13 + bitCount) % 5;
-        cout << "value: " << value << endl;
         for (size_t i = 0; i < subblock.size(); i += 18)
         {
             string subblockPart = subblock.substr(i, 18);
