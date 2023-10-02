@@ -101,6 +101,9 @@ int main()
         while (getline(inputFile, eilute))
             input += eilute;
 
+        if (input.empty())
+            input = " "; 
+
         if(input.empty())
             input = " ";
         
