@@ -1,96 +1,97 @@
 # 1-oji užduotis: Hash funkcijos generatoriaus kūrimas
 
-## v0.1.1 pseudo-kodas:
+## v0.2 pseudo-kodas:
 
 ```
 START
 
-Function generateRandomLine()
-    unique = False
-    hexResult = ""
+function intToBinary(num)
+    binary = convert num to binary representation with 8 bits
+    return binary as string
 
-    WHILE not unique
-        randomBinaryString = ""
+function binaryToHex(binary)
+    bits = create bitset from binary
+    hexValue = convert bits to decimal and then to hexadecimal
+    return hexValue as string
 
-        Initialize random device and generator
-        distribution = Uniform distribution between 0 and 1
+function processBlock(block, unicodeValue, bitCount, output)
+    subblocks = split block into subblocks of size 64 or 256
+    output = ""
 
-        WHILE length of randomBinaryString < 256
-            randomBit = Generate a random bit using distribution
-            Append randomBit to randomBinaryString
+    for each subblock in subblocks
+        value = (unicodeValue / 13 + bitCount) % 5
+        shiftedSubblock = ""
 
-        // Divide the 256-bit binary code into 4 parts of 64 bits each
-        FOR i FROM 0 TO 3
-            binaryChunk = Substring of randomBinaryString from i * 64 to (i + 1) * 64
-            Convert binaryChunk to a 64-bit unsigned integer (chunkValue)
-            Convert chunkValue to a 16-character hexadecimal string (hexBuffer)
-            Append hexBuffer to hexResult
+        for i from 0 to subblock.size() step 18
+            subblockPart = extract 18 bits from subblock starting at i
+            shiftAmount = i % 8 + value
+            shiftedPart = shift subblockPart circularly by shiftAmount
+            shiftedSubblock += shiftedPart
 
-        Open "output_archive.txt" file
-        exists = False
-        existingContent = ""
+        nibbles = split shiftedSubblock into 4-bit nibbles
+        for each nibble in nibbles
+            hexNibble = binaryToHex(nibble)
+            output += hexNibble
 
-        WHILE there are lines in the file
-            IF existingContent is equal to hexResult
-                exists = True
-                Exit loop
+function main()
+    unicodeValue = 0
+    choice = 0
+    output = ""
 
-        Close the file
+    print "Pasirinkite: 1 - įvedimas ranka, 2 - skaitymas iš failo: "
+    read choice
 
-        IF not exists
-            unique = True
+    if choice is 1
+        print "Įveskite žodį, kurį norite užkoduoti:"
+        read input
+    else if choice is 2
+        print "Pasirinkite, su kuriuo failu norite dirbti:"
+        list all files with ".txt" extension
+        read userInput
 
-    Return hexResult
+        open inputFile with userInput
+        if inputFile does not exist
+            print "Nepavyko atidaryti failo."
+            exit
 
-Main Function
-    userInput = Input from the user
-    Display "Select the file you want to work with: "
+        if inputFile is empty
+            print "Failas yra tuščias."
 
-    Display the list of ".txt" files in the directory
+        while there are lines in inputFile
+            read line from inputFile
+            append line to input
+        close inputFile
 
-    Read userInput from the user
+    bitCount1 = size of input * 8
+    bitCount = size of input
 
-    Open inputFile using userInput
+    for i from 0 to size of input
+        if i is half of size of input
+            unicodeValue += ASCII value of input[i] multiplied by 17
 
-    IF failed to open the file
-        Print an error message
-        Exit with code 1
+        unicodeValue += ASCII value of input[i]
 
-    visaEilute = ""
+    targetBitCount = maximum of 256 and next multiple of 256 after bitCount1
 
-    WHILE there are lines in inputFile
-        Concatenate the line to visaEilute
+    binaryInput = ""
+    for each character c in input
+        binaryChar = convert c to binary with 8 bits
+        append binaryChar to binaryInput
 
-    rastas = False
+    number = bitCount
 
-    Open "input_archive.txt" and "output_archive.txt" files
+    while size of binaryInput is less than targetBitCount
+        binaryInput += intToBinary(number)
+        number += bitCount + ASCII value of first character in input
 
-    IF failed to open one or both files
-        Print an error message
-        Exit with code 1
+    blocks = split binaryInput into blocks of size 256
 
-    WHILE there are lines in both inputArchive and outputArchive files
-        IF eiluteIsArchyvo is equal to visaEilute
-            rastas = True
-            Display "Found output: " + rastasOutputas
-            Exit loop
+    for each block in blocks
+        blockBitCount = size of block
+        processBlock(block, unicodeValue, bitCount, output)
 
-    IF not rastas
-        Close inputArchive and outputArchive
-
-        Open "input_archive.txt" and "output_archive.txt" files for appending
-
-        IF failed to open one or both files
-            Print an error message
-            Exit with code 1
-
-        Append visaEilute to inputArchive
-
-        naujasOutputas = Call generateRandomLine()
-
-        Append naujasOutputas to outputArchive
-
-        Display "New output: " + naujasOutputas
+    if output is not empty
+        print "Rezultatas (hexadecimal):", output
 
 Exit with code 0
 ```
