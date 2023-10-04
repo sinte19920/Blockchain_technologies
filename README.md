@@ -151,3 +151,9 @@ Testavimui naudoti tekstiniai failai:
 <img width="356" alt="Screenshot 2023-10-04 at 13 46 13" src="https://github.com/sinte19920/Blockchain_technologies/assets/66333376/6e13bc4b-83aa-450e-9a7d-ba551e3a80db">
 
 ## Išvados:
+
+* Hash funkcijos išėjimas (output) visada to paties/fiksuoto dydžio (256 bitų, 64 simbolių hex).
+* Hash funkcija yra deterministinė - tam pačiam įvedimui (input) išvedamas visuomet tas pats rezultatas (output).
+* Funkcija veikia greitai, nors ir yra šiek tiek priklausoma nuo įvesties dydžio.
+* Funkcija yra atspari kolizijai.
+* Funkcija ne visada pasižymi ties lavinos efekto savybe, varijuoja skirtingumas bitų ir hexų nuo 0% iki 100%.
