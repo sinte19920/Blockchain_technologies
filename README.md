@@ -95,3 +95,61 @@ function main()
 
 Exit with code 0
 ```
+# Eksperimentinis tyrimas ir rezultatų analizė
+
+Testavimui naudoti tekstiniai failai:
+
+* A.txt - vienas simbolis 'A'.
+* B.txt - vienas simbolis 'B'.
+* 1003.txt - 1003 atsitiktinai sugeneruoti simboliai.
+* 2050.txt - 2050 atsitiktinai sugeneruoti simboliai.
+* 1003x.txt - 1002 atsitiktinai sugeneruoti simboliai ir 502 vietoje 'x'.
+* 1003y.txt - tokie patys 1002 simboliai, kaip '1003x.txt', tik 502 vietoje 'y'.
+* tuscias.txt - tuščias failas.
+* konstitucija.txt - Lietuvos Respublikos Konstitucija.
+* poros10.txt - 25 000 atsitiktinai sugeneruotos 10 simbolių ilgio eilutės.
+* poros100.txt - 25 000 atsitiktinai sugeneruotos 100 simbolių ilgio eilutės.
+* poros500.txt - 25 000 atsitiktinai sugeneruotos 500 simbolių ilgio eilutės.
+* poros1000.txt - 25 000 atsitiktinai sugeneruotos 1000 simbolių ilgio eilutės.
+* diffsymb10.txt - 25 000 atsitiktinai sugeneruotos 10 simbolių ilgio eilutės, kurios porose skiriasi vienu (paskutiniu) simboliu.
+* diffsymb100.txt - 25 000 atsitiktinai sugeneruotos 100 simbolių ilgio eilutės, kurios porose skiriasi vienu (paskutiniu) simboliu.
+* diffsymb500.txt - 25 000 atsitiktinai sugeneruotos 500 simbolių ilgio eilutės, kurios porose skiriasi vienu (paskutiniu) simboliu.
+* diffsymb1000.txt - 25 000 atsitiktinai sugeneruotos 1000 simbolių ilgio eilutės, kurios porose skiriasi vienu (paskutiniu) simboliu.
+
+
+## Hash funkcijos veikimas:
+
+|  Failo pavadinimas  |  Sugeneruota reikšmė                                               |
+|---------------------|--------------------------------------------------------------------|
+|    **A.txt**        |  82029c2e01293af19e22dcaea32b3af3be42dd2f452d3af5de62ddafe72f3af7  |
+|    **B.txt**        |  0805487c1354a3245865c9fe795a232ab8c5cb7fdf60a33019260cf135662736  |
+|    **1003.txt**     |  aacaacae49226a388242c849c927ebbab99ac72e8ab6acb15ac2ce6617ba292c  |
+|    **2050.txt**     |  55217483d0d32515e5b536542dd617549db9673453964613354c6496ca1d264c  |
+|    **1003x.txt**    |  77765ce5335531634c58751106a73295636d64c1f695458575666d54c7848a14  |
+|    **1003y.txt**    |  eeecb9ca66aa62c698b0aa221d4e612bc6da8983fd2a8b0aeacc9aa99f091029  |
+|    **tuscias.txt**  |  2001090da85a51ece809292da8daf3ecf011094df95b51edf819296df9dbf3ed  |
+
+## Hash funkcijos efektyvumas:
+
+|                                                            Hash funkcijos veikimo trukmė (s)                                                         |
+|------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  Eilučių kiekis    |     1      |     2      |     4      |     8      |     16     |     32     |     64     |    128     |    256     |    512     |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------|
+|      Hash          |  0.00012   |  0.00008   |  0.00021   |  0.00021   |  0.00057   |  0.00167   |  0.00303   |  0.00536   |  0.01293   |  0.02243   |
+|    funkcijos       |  0.00011   |  0.00011   |  0.00012   |  0.00026   |  0.00040   |  0.00118   |  0.00204   |  0.00415   |  0.00914   |  0.02050   |
+|     veikimo        |  0.00020   |  0.00010   |  0.00013   |  0.00023   |  0.00055   |  0.00089   |  0.00340   |  0.00409   |  0.00903   |  0.01912   |
+|    trukmė (s)      |  0.00010   |  0.00009   |  0.00013   |  0.00024   |  0.00050   |  0.00095   |  0.00323   |  0.00407   |  0.00922   |  0.02001   |
+|                    |  0.00010   |  0.00010   |  0.00012   |  0.00023   |  0.00047   |  0.00096   |  0.00307   |  0.00410   |  0.00884   |  0.01869   |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------|
+|    **Vidurkis**    |  0.000126  |  0.000096  |  0.000142  |  0.000234  |  0.000498  |  0.00113   |  0.002954  |  0.004354  |  0.009832  |  0.02015   |
+
+<img width="430" alt="image" src="https://github.com/sinte19920/Blockchain_technologies/assets/66333376/5e3e3ace-84b1-4eb7-9d5a-74d423d99963">
+
+## Hash funkcijos atsparumas kolizijai:
+
+|  Failo pavadinimas  |  Kolizijų skaičius  |
+|---------------------|---------------------|
+|  **poros10.txt**    |          0          |
+|  **poros100.txt**   |          0          |
+|  **poros500.txt**   |          0          |
+|  **poros1000.txt**  |          0          |
