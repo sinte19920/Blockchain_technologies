@@ -146,9 +146,9 @@ Testavimui naudoti tekstiniai failai:
 
 ## Hash funkcijos lavinos efektas:
 
-<img width="405" alt="Screenshot 2023-10-04 at 13 38 33" src="https://github.com/sinte19920/Blockchain_technologies/assets/66333376/0f333742-33aa-44fe-be8f-25c40591a020">
+<img width="342" alt="Screenshot 2023-10-20 at 13 41 43" src="https://github.com/sinte19920/Blockchain_technologies/assets/66333376/746a6e3d-b8fd-4fa6-a92c-660818bae70d">
 
-<img width="356" alt="Screenshot 2023-10-04 at 13 46 13" src="https://github.com/sinte19920/Blockchain_technologies/assets/66333376/6e13bc4b-83aa-450e-9a7d-ba551e3a80db">
+<img width="277" alt="Screenshot 2023-10-20 at 13 43 00" src="https://github.com/sinte19920/Blockchain_technologies/assets/66333376/17f8c151-f1c4-4e78-9b8d-1112acd38486">
 
 ## Išvados:
 
